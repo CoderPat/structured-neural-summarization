@@ -1,0 +1,22 @@
+python train_and_eval.py --train_source_file data/sourcecode/java/split/train/inputs.jsonl.gz \ 
+                         --train_target_file data/sourcecode/java/split/train/summaries.jsonl.gz \ 
+                         --valid_source_file data/sourcecode/java/split/valid/inputs.jsonl.gz \ 
+                         --valid_target_file data/sourcecode/java/split/valid/summaries.jsonl.gz \ 
+                         --node_vocab_file data/sourcecode/java/node.vocab \ 
+                         --edge_vocab_file data/sourcecode/java/edge.vocab \ 
+                         --target_vocab_file data/sourcecode/java/output.vocab \ 
+                         --train_steps 50000 \ 
+                         --optimizer momentum \ 
+                         --learning_rate 0.1 \ 
+                         --lr_decay_rate 0.95 \ 
+                         --lr_decay_steps 5000 \ 
+                         --copy_attention  \ 
+                         --model_name java_small_momentum_0.1_256_0.0  \ 
+                         --checkpoint_dir java_small_momentum_0.1_256_0.0 \ 
+                         --rnn_hidden_size 256 \ 
+                         --rnn_hidden_dropout 0.0 \ 
+                         --node_features_dropout 0.0 \ 
+                         --validation_interval 5000 \ 
+                         --embeddings_dropout 0.0 \ 
+                         --case_sensitive  \ 
+                         --attend_all_nodes

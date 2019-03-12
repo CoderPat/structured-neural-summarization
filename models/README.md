@@ -1,0 +1,1 @@
+This folder contain sample configurations for other models used in the paper.
