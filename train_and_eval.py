@@ -286,7 +286,9 @@ def train_and_eval(model, args):
                         worse_epochs = 0
                         print("saving best model...")
                         saver.save(session, os.path.join(args.checkpoint_dir, "best.ckpt"))
-                    worse_epochs += 1
+                    else:
+                        worse_epochs += 1
+                        
                     # and stop training if triggered patience
                     if worse_epochs >= args.patience:
                         print("early stopping triggered...")
@@ -509,11 +511,11 @@ def build_optimizer(args):
         optimizer_class = getattr(tf.train, optimizer, None)
         if optimizer_class is None:
             raise ValueError("Unsupported optimizer %s" % optimizer)
-
+        kwargs = {}
         # TODO: optimizer params
         # optimizer_params = params.get("optimizer_params", {})
 
-    def optimizer(lr): return optimizer_class(lr)  # **optimizer_params)
+    def optimizer(lr): return optimizer_class(lr, **kwargs)
 
     learning_rate = args.learning_rate
     if args.lr_decay_rate is not None:
