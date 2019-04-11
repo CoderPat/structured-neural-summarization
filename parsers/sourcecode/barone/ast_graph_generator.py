@@ -638,7 +638,6 @@ class AstGraphGenerator(NodeVisitor):
         
         self.terminal('raise')
         if hasattr(node, 'exc') and node.exc is not None:
-            self.terminal(' ')
             self.visit(node.exc)
             if node.cause is not None:
                 self.terminal('from')
@@ -792,8 +791,6 @@ class AstGraphGenerator(NodeVisitor):
         self.terminal('(')
         op = UNARYOP_SYMBOLS[type(node.op)]
         self.terminal(op)
-        if op == 'not':
-            self.terminal(' ')
         self.visit(node.operand)
         self.terminal(')')
         self.parent = gparent
@@ -938,7 +935,6 @@ class AstGraphGenerator(NodeVisitor):
         
         self.terminal('except')
         if node.type is not None:
-            self.terminal(' ')
             self.visit(node.type)
             if node.name is not None:
                 self.terminal(' as ')
