@@ -27,7 +27,7 @@ ognn-build-vocab --no_pad_token --field_name edges --string_index 0 \
                  /data/naturallanguage/cnn_dailymail/split/train/inputs.jsonl.gz
 ognn-build-vocab --with_sequence_tokens \
                  --save_vocab /data/naturallanguage/cnn_dailymail/output.vocab \
-                 /data/naturallanguage/cnn_dailymail/split/train/inputs.jsonl.gz 
+                 /data/naturallanguage/cnn_dailymail/split/train/targets.jsonl.gz 
 ```
 
 Then run

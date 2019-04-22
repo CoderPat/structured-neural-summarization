@@ -286,7 +286,9 @@ def train_and_eval(model, args):
                         worse_epochs = 0
                         print("saving best model...")
                         saver.save(session, os.path.join(args.checkpoint_dir, "best.ckpt"))
-                    worse_epochs += 1
+                    else:
+                        worse_epochs += 1
+
                     # and stop training if triggered patience
                     if worse_epochs >= args.patience:
                         print("early stopping triggered...")
@@ -424,8 +426,7 @@ def infer(model, args):
         mode=tf.estimator.ModeKeys.PREDICT,
         batch_size=args.batch_size,
         metadata=metadata,
-        features_file=args.train_source_file,
-        labels_file=args.train_target_file,
+        features_file=args.infer_source_file,
         features_bucket_width=args.bucket_width,
         sample_buffer_size=args.sample_buffer_size)
     session_config = tf.ConfigProto(
@@ -509,11 +510,11 @@ def build_optimizer(args):
         optimizer_class = getattr(tf.train, optimizer, None)
         if optimizer_class is None:
             raise ValueError("Unsupported optimizer %s" % optimizer)
-
+        kwargs = {}
         # TODO: optimizer params
         # optimizer_params = params.get("optimizer_params", {})
 
-    def optimizer(lr): return optimizer_class(lr)  # **optimizer_params)
+    def optimizer(lr): return optimizer_class(lr, **kwargs)
 
     learning_rate = args.learning_rate
     if args.lr_decay_rate is not None:
