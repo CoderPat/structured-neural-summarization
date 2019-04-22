@@ -288,7 +288,7 @@ def train_and_eval(model, args):
                         saver.save(session, os.path.join(args.checkpoint_dir, "best.ckpt"))
                     else:
                         worse_epochs += 1
-                        
+
                     # and stop training if triggered patience
                     if worse_epochs >= args.patience:
                         print("early stopping triggered...")
@@ -426,8 +426,7 @@ def infer(model, args):
         mode=tf.estimator.ModeKeys.PREDICT,
         batch_size=args.batch_size,
         metadata=metadata,
-        features_file=args.train_source_file,
-        labels_file=args.train_target_file,
+        features_file=args.infer_source_file,
         features_bucket_width=args.bucket_width,
         sample_buffer_size=args.sample_buffer_size)
     session_config = tf.ConfigProto(
