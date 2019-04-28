@@ -441,10 +441,10 @@ def infer(model, args):
         saver.restore(session, os.path.join(args.checkpoint_dir, "best.ckpt"))
 
         # build eval graph, loss and prediction ops
-        features, labels = iterator.get_next()
+        features = iterator.get_next()
         with tf.variable_scope(args.model_name, reuse=True):
             _, predictions = model(
-                features, labels, tf.estimator.ModeKeys.PREDICT, params, config)
+                features, None, tf.estimator.ModeKeys.PREDICT, params, config)
 
         session.run([iterator.initializer, tf.tables_initializer()])
 
@@ -517,7 +517,7 @@ def build_optimizer(args):
     def optimizer(lr): return optimizer_class(lr, **kwargs)
 
     learning_rate = args.learning_rate
-    if args.lr_decay_rate is not None:
+    if args.lr_decay_rate:
         learning_rate = tf.train.exponential_decay(
             learning_rate,
             global_step,
@@ -542,6 +542,7 @@ def compute_rouge(predictions, targets):
     predictions = [" ".join(prediction).lower() for prediction in predictions]
     predictions = [prediction if prediction else "EMPTY" for prediction in predictions]
     targets = [" ".join(target).lower() for target in targets]
+    targets = [target if target else "EMPTY" for target in targets]
     rouge = Rouge()
     scores = rouge.get_scores(hyps=predictions, refs=targets, avg=True)
     return scores['rouge-2']['f']
