@@ -47,7 +47,7 @@ def main():
                         help="Number of steps to optimize")
     parser.add_argument('--learning_rate', default=0.001, type=float,
                         help="The learning rate for the optimizer")
-    parser.add_argument('--lr_decay_rate', default=0.1, type=float,
+    parser.add_argument('--lr_decay_rate', default=0.0, type=float,
                         help="Learning rate decay rate")
     parser.add_argument('--lr_decay_steps', default=10000, type=float,
                         help="Number of steps between learning rate decay application")
@@ -458,8 +458,6 @@ def infer(model, args):
 
                 infer_predictions = infer_predictions + batch_predictions
                 steps += 1
-                if steps > 200:
-                    break
             except tf.errors.OutOfRangeError:
                 break
 
