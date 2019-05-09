@@ -1,6 +1,6 @@
 # Structured Neural Summarization
 
-A repository with the code for [the paper](https://arxiv.org/abs/1811.01824) with the same title. The experiments are based on the more general-purpose graph neural network library [OpenGNN](https://github.com/CoderPat/OpenGNN). You can install it by following it's README.md.
+A repository with the code for [the paper](https://arxiv.org/abs/1811.01824) with the same title. The experiments are based on the more general-purpose graph neural network library [OpenGNN](https://github.com/CoderPat/OpenGNN). You can install it by following it's README.md. Also some scripts are dependent on some additional libraries specified in the requirements file
 
 Experiments are based around the `train_and_eval.py` script. Besides the main experiments, this repo also contains the following folders:
 

@@ -426,9 +426,7 @@ def infer(model, args):
         mode=tf.estimator.ModeKeys.PREDICT,
         batch_size=args.batch_size,
         metadata=metadata,
-        features_file=args.infer_source_file,
-        features_bucket_width=args.bucket_width,
-        sample_buffer_size=args.sample_buffer_size)
+        features_file=args.infer_source_file)
     session_config = tf.ConfigProto(
         allow_soft_placement=True,
         log_device_placement=False,
