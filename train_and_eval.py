@@ -47,7 +47,7 @@ def main():
                         help="Number of steps to optimize")
     parser.add_argument('--learning_rate', default=0.001, type=float,
                         help="The learning rate for the optimizer")
-    parser.add_argument('--lr_decay_rate', default=0.1, type=float,
+    parser.add_argument('--lr_decay_rate', default=0.0, type=float,
                         help="Learning rate decay rate")
     parser.add_argument('--lr_decay_steps', default=10000, type=float,
                         help="Number of steps between learning rate decay application")
@@ -426,9 +426,7 @@ def infer(model, args):
         mode=tf.estimator.ModeKeys.PREDICT,
         batch_size=args.batch_size,
         metadata=metadata,
-        features_file=args.infer_source_file,
-        features_bucket_width=args.bucket_width,
-        sample_buffer_size=args.sample_buffer_size)
+        features_file=args.infer_source_file)
     session_config = tf.ConfigProto(
         allow_soft_placement=True,
         log_device_placement=False,
@@ -441,10 +439,10 @@ def infer(model, args):
         saver.restore(session, os.path.join(args.checkpoint_dir, "best.ckpt"))
 
         # build eval graph, loss and prediction ops
-        features, labels = iterator.get_next()
+        features = iterator.get_next()
         with tf.variable_scope(args.model_name, reuse=True):
             _, predictions = model(
-                features, labels, tf.estimator.ModeKeys.PREDICT, params, config)
+                features, None, tf.estimator.ModeKeys.PREDICT, params, config)
 
         session.run([iterator.initializer, tf.tables_initializer()])
 
@@ -458,8 +456,6 @@ def infer(model, args):
 
                 infer_predictions = infer_predictions + batch_predictions
                 steps += 1
-                if steps > 200:
-                    break
             except tf.errors.OutOfRangeError:
                 break
 
@@ -517,7 +513,7 @@ def build_optimizer(args):
     def optimizer(lr): return optimizer_class(lr, **kwargs)
 
     learning_rate = args.learning_rate
-    if args.lr_decay_rate is not None:
+    if args.lr_decay_rate:
         learning_rate = tf.train.exponential_decay(
             learning_rate,
             global_step,
@@ -542,6 +538,7 @@ def compute_rouge(predictions, targets):
     predictions = [" ".join(prediction).lower() for prediction in predictions]
     predictions = [prediction if prediction else "EMPTY" for prediction in predictions]
     targets = [" ".join(target).lower() for target in targets]
+    targets = [target if target else "EMPTY" for target in targets]
     rouge = Rouge()
     scores = rouge.get_scores(hyps=predictions, refs=targets, avg=True)
     return scores['rouge-2']['f']
